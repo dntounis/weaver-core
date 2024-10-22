@@ -487,14 +487,14 @@ def optim(args, model, device):
     # load previous training and resume if `--load-epoch` is set
     if args.load_epoch is not None:
         _logger.info('Resume training from epoch %d' % args.load_epoch)
-        model_state = torch.load(args.model_prefix + '_epoch-%d_state.pt' % args.load_epoch, map_location=device)
+        model_state = torch.load(args.model_prefix + '_epoch-%d_state.pt' % args.load_epoch, map_location=device,weights_only=True) #Jim
         if isinstance(model, torch.nn.parallel.DistributedDataParallel):
             model.module.load_state_dict(model_state)
         else:
             model.load_state_dict(model_state)
         opt_state_file = args.model_prefix + '_epoch-%d_optimizer.pt' % args.load_epoch
         if os.path.exists(opt_state_file):
-            opt_state = torch.load(opt_state_file, map_location=device)
+            opt_state = torch.load(opt_state_file, map_location=device,weights_only=True) #Jim
             opt.load_state_dict(opt_state)
         else:
             _logger.warning('Optimizer state file %s NOT found!' % opt_state_file)
